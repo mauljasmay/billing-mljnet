@@ -14,7 +14,7 @@
 - [x] Update app/package.json author
 - [x] Update scripts/prepare-github-deploy.js branding
 - [x] Update app/scripts/prepare-github-deploy.js branding
-- [ ] Update hardcoded strings in JS files (defaults in agentWhatsApp.js, etc.)
-- [ ] Update manifest files if they contain branding
-- [ ] Verify all branding is consistent
-- [ ] Test application functionality
+- [x] Update hardcoded strings in JS files (defaults in agentWhatsApp.js, etc.)
+- [x] Update manifest files if they contain branding
+- [x] Verify all branding is consistent
+- [x] Test application functionality
