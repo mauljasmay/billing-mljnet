@@ -1,6 +1,6 @@
 # Dockerfile untuk Gembok Bill
-# Build dengan: docker build -t gembok-bill .
-# Run dengan: docker run -d -p 3002:3002 --name gembok-bill gembok-bill
+# Build dengan: docker build -t Billing MLJNET .
+# Run dengan: docker run -d -p 3002:3002 --name Billing MLJNET Billing MLJNET
 
 FROM node:20-bullseye-slim
 
@@ -41,3 +41,4 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
 
 # Start aplikasi
 CMD ["npm", "start"]
+

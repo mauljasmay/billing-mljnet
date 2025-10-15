@@ -114,11 +114,11 @@ chmod 644 settings.json
 
 # 5. Restart aplikasi (jika menggunakan PM2)
 echo "🔄 Restart aplikasi..."
-pm2 restart gembok-bill || pm2 start app.js --name gembok-bill
+pm2 restart Billing MLJNET || pm2 start app.js --name Billing MLJNET
 
 # 6. Verifikasi
 echo "✅ Verifikasi deploy..."
-pm2 status gembok-bill
+pm2 status Billing MLJNET
 
 echo "🎉 Deploy selesai!"
 `;
@@ -472,3 +472,4 @@ if (require.main === module) {
 }
 
 module.exports = GitHubDeployPreparer;
+

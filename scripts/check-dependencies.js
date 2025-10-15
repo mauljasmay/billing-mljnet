@@ -97,7 +97,8 @@ try {
 console.log('\n📋 Recommendations:');
 console.log('1. If SQLite3 errors occur, run: npm rebuild');
 console.log('2. For Linux servers, run: npm install sqlite3 --build-from-source');
-console.log('3. Use PM2 for production: pm2 start app.js --name gembok-bill');
-console.log('4. Check logs with: pm2 logs gembok-bill');
+console.log('3. Use PM2 for production: pm2 start app.js --name Billing MLJNET');
+console.log('4. Check logs with: pm2 logs Billing MLJNET');
 
 console.log('\n🎯 Ready to run: npm start');
+

@@ -97,7 +97,7 @@ console.log('✅ Created icon generator HTML');
 const createSimpleIcon = (size) => {
     // This is a placeholder - in a real implementation, you would use a library like canvas or sharp
     // For now, we'll create a simple text file as placeholder
-    const iconData = `PNG Icon ${size}x${size} - Placeholder for GEMBOK-BILL Collector App`;
+    const iconData = `PNG Icon ${size}x${size} - Placeholder for Billing MLJNET Collector App`;
     fs.writeFileSync(path.join(iconsDir, `icon-${size}x${size}.png.txt`), iconData);
 };
 
@@ -113,3 +113,4 @@ console.log('1. Open public/icons/generate-icons.html in a browser');
 console.log('2. Or use an online icon generator');
 console.log('3. Or use a tool like ImageMagick or Sharp to convert the SVG');
 console.log('\n🎯 PWA icons are ready for the collector app!');
+

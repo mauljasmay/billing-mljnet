@@ -98,102 +98,6 @@ npm install sqlite3 --build-from-source
 
 Edit file `settings.json` dengan pengaturan yang sesuai:
 
-```json
-{
-  "app_version": "2.1.0",
-  "version_name": "WhatsApp Modular + Role System",
-  "version_date": "2025-01-27",
-  "version_notes": "Added technician role, trouble report & PPPoE WhatsApp commands",
-  "build_number": "20250127.001",
-  "app_name": "GEMBOK",
-  "company_header": "GEMBOK",
-  "footer_info": "Info Hubungi : 081947215703",
-  
-  "admins.0": "6281947215703",
-  "admin_enabled": "true",
-  "admin_username": "admin",
-  "admin_password": "admin",
-  
-  "technician_numbers.0": "6283807665111",
-  "technician_numbers.1": "6282218094111",
-  "technician_group_id": "120363029715729111@g.us",
-  
-  "genieacs_url": "http://192.168.8.89:7557",
-  "genieacs_username": "admin",
-  "genieacs_password": "admin",
-  
-  "mikrotik_host": "192.168.8.1",
-  "mikrotik_port": "8728",
-  "mikrotik_user": "admin",
-  "mikrotik_password": "admin",
-  "main_interface": "ether1-ISP",
-  "pppoe_monitor_enable": "true",
-  
-  "whatsapp_session_path": "./whatsapp-session",
-  "whatsapp_keep_alive": "true",
-  "whatsapp_restart_on_error": "true",
-  "whatsapp_log_level": "silent",
-  
-  "pppoe_monitor_interval": "60000",
-  "pppoe_notifications.enabled": "true",
-  "pppoe_notifications.loginNotifications": "true",
-  "pppoe_notifications.logoutNotifications": "true",
-  "pppoe_notifications.includeOfflineList": "true",
-  "pppoe_notifications.maxOfflineListCount": "20",
-  "pppoe_notifications.monitorInterval": "60000",
-  
-  "rx_power_warning": "-40",
-  "rx_power_critical": "-45",
-  "rx_power_notification_enable": "true",
-  "rx_power_notification_interval": "300000",
-  
-  "customerPortalOtp": "false",
-  "otp_length": "4",
-  "otp_expiry_minutes": "5",
-  
-  "server_port": "3003",
-  "server_host": "localhost",
-  "secret_key": "gembok-digital-network",
-  "reconnect_interval": "5000",
-  "log_level": "info",
-  "logo_filename": "logo.png",
-  "payment_gateway": {
-    "active": "midtrans",
-    "midtrans": {
-      "enabled": true,
-      "production": false,
-      "merchant_id": "G123456789",
-      "client_key": "SB-Mid-client-123456789",
-      "server_key": "SB-Mid-server-123456789"
-    },
-    "xendit": {
-      "enabled": false,
-      "production": false,
-      "api_key": "xnd_public_development_123456789",
-      "callback_token": "xnd_callback_token_123456789"
-    },
-    "tripay": {
-      "enabled": false,
-      "production": false,
-      "api_key": "DEV-123456789",
-      "private_key": "private_key_123456789",
-      "merchant_code": "T12345"
-    }
-  },
-  "payment_accounts": {
-    "bank_transfer": {
-      "bank_name": "Bank BRI",
-      "account_number": "1234-5678-9012-3456",
-      "account_name": "GEMBOK"
-    },
-    "cash": {
-      "office_address": "Jl. Contoh No. 123, Kota, Provinsi",
-      "office_hours": "08:00 - 17:00 WIB"
-    }
-  }
-}
-```
-
 ### 4. Setup Database
 
 
@@ -222,7 +126,7 @@ npm install -g pm2
 ```
 # Start aplikasi
 ```bash
-pm2 start app.js --name gembok-bill
+pm2 start app.js --name Billing MLJNET
 ```
 
 # Monitor aplikasi
@@ -231,7 +135,7 @@ pm2 monit
 ```
 # View logs
 ```bash
-pm2 logs gembok-bill
+pm2 logs Billing MLJNET
 ```
 
 ### 6. Setup WhatsApp Bot
@@ -679,7 +583,7 @@ config/
 ## 📁 Struktur Aplikasi
 
 ```
-gembok-bill/
+Billing MLJNET/
 ├── app.js                 # File utama aplikasi
 ├── package.json           # Dependencies dan scripts
 ├── settings.json          # Konfigurasi aplikasi
@@ -825,7 +729,7 @@ Distributed under the ISC License. See `LICENSE` for more information.
 - **📱 Telegram Group**: [https://t.me/alijayaNetAcs](https://t.me/alijayaNetAcs)
 - **📢 Telegram Channel**: [https://t.me/alijayaNetwork](https://t.me/alijayaNetwork)
 - **📺 YouTube**: [https://www.youtube.com/shorts/qYJFQY7egFw](https://www.youtube.com/shorts/qYJFQY7egFw)
-- **💬 Issues**: [GitHub Issues](https://github.com/alijayanet/gembok-bill/issues)
+- **💬 Issues**: [GitHub Issues](https://github.com/alijayanet/Billing MLJNET/issues)
 - **📞 WhatsApp Support**: 081947215703
 
 ---
@@ -849,3 +753,4 @@ Aplikasi ini dikembangkan untuk keperluan ISP dan membutuhkan konfigurasi yang t
 ---
 
 **Made with ❤️ by [MLJNET Team](https://github.com/mauljasmay)**
+

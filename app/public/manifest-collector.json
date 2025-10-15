@@ -1,7 +1,7 @@
 {
-  "name": "GEMBOK-BILL Collector",
+  "name": "Billing MLJNET Collector",
   "short_name": "Collector",
-  "description": "Aplikasi tukang tagih untuk sistem billing GEMBOK-BILL",
+  "description": "Aplikasi tukang tagih untuk sistem billing Billing MLJNET",
   "start_url": "/collector/dashboard",
   "display": "standalone",
   "background_color": "#ffffff",
@@ -63,3 +63,4 @@
   "scope": "/collector/",
   "prefer_related_applications": false
 }
+

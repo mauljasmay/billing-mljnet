@@ -245,7 +245,7 @@ node scripts/genieacs-dns-config.js
 
 ```bash
 # Tambahkan ke crontab untuk konfigurasi otomatis setiap jam
-0 * * * * cd /path/to/gembok-bill && node scripts/integrate-genieacs-dns-billing.js --auto
+0 * * * * cd /path/to/Billing MLJNET && node scripts/integrate-genieacs-dns-billing.js --auto
 ```
 
 ### **2. Integration dengan Customer Creation**
@@ -283,3 +283,4 @@ await dnsIntegration.configureDNSForActivatedCustomer(customerId);
 - [GenieACS Documentation](https://github.com/genieacs/genieacs)
 - [TR-069 Standard](https://www.broadband-forum.org/technical/download/TR-069.pdf)
 - [Mikrotik RouterOS Documentation](https://help.mikrotik.com/docs/display/ROS/RouterOS)
+

@@ -299,7 +299,7 @@ npm run dev
 npm start
 
 # Atau dengan PM2
-pm2 start app.js --name gembok-bill
+pm2 start app.js --name Billing MLJNET
 pm2 save
 pm2 startup
 \`\`\`
@@ -373,7 +373,7 @@ npm install
 \`\`\`bash
 # Hapus session dan restart
 rm -rf whatsapp-session/
-pm2 restart gembok-bill
+pm2 restart Billing MLJNET
 \`\`\`
 
 ## 📞 Support
@@ -472,3 +472,4 @@ if (require.main === module) {
 }
 
 module.exports = GitHubDeployPreparer;
+

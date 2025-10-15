@@ -58,7 +58,7 @@ npm run dev
 npm start
 
 # Atau dengan PM2
-pm2 start app.js --name gembok-bill
+pm2 start app.js --name Billing MLJNET
 ```
 
 ## 🔧 Post-Deploy Verification
@@ -104,3 +104,4 @@ pm2 start app.js --name gembok-bill
 - Cek permissions direktori backup/
 - Cek disk space
 - Cek log aplikasi
+

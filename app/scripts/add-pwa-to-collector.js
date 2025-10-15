@@ -3,7 +3,7 @@ const path = require('path');
 
 const collectorViewsDir = path.join(__dirname, '../views/collector');
 const pwaMetaTags = `    <!-- PWA Meta Tags -->
-    <meta name="description" content="Dashboard tukang tagih untuk sistem billing GEMBOK-BILL">
+    <meta name="description" content="Dashboard tukang tagih untuk sistem billing Billing MLJNET">
     <meta name="theme-color" content="#28a745">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -90,3 +90,4 @@ if (skipped > 0) {
     console.log(`⚠️ Skipped ${skipped} files.`);
 }
 console.log('📱 All collector pages now have PWA capabilities!');
+

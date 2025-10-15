@@ -2381,7 +2381,7 @@ router.get('/system/check-update', async (req, res) => {
 router.post('/system/update', async (req, res) => {
     try {
         const branch = (req.body && req.body.branch && String(req.body.branch).trim()) || getSetting('git_default_branch', 'main');
-        const appName = getSetting('pm2_app_name', 'gembok-bill');
+        const appName = getSetting('pm2_app_name', 'Billing MLJNET');
         const repoPath = getSetting('repo_path', process.cwd());
         const opts = { cwd: repoPath, windowsHide: true, shell: process.platform === 'win32' ? undefined : '/bin/bash' };
 

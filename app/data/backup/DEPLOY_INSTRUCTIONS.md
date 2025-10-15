@@ -36,7 +36,7 @@ chmod +x *.sh
 ./validate_*.sh
 
 # Cek log aplikasi
-pm2 logs gembok-bill
+pm2 logs Billing MLJNET
 
 # Test aplikasi
 curl http://localhost:3003/admin
@@ -70,3 +70,4 @@ curl http://localhost:3003/admin
 ### Data hilang
 - Restore dari backup terakhir
 - Cek apakah ada transaksi yang belum di-commit
+

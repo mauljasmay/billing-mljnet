@@ -189,7 +189,7 @@ self.addEventListener('push', function(event) {
   };
   
   event.waitUntil(
-    self.registration.showNotification('GEMBOK-BILL Collector', options)
+    self.registration.showNotification('Billing MLJNET Collector', options)
   );
 });
 
@@ -212,3 +212,4 @@ self.addEventListener('notificationclick', function(event) {
     );
   }
 });
+
