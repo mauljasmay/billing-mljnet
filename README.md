@@ -81,17 +81,6 @@
 ```bash
 apt install git curl -y
 ```
-# Clone repository
-```
-git clone https://github.com/alijayanet/gembok-bill
-```
-```bash
-cd gembok-bill
-```
-
-### 2. Install Dependencies
-
-
 # Install semua dependencies
 ```bash
 npm install
