@@ -1,6 +1,6 @@
 {
   "name": "billing-mljnet",
-  "version": "2.1.0",
+  "version": "3.1.10",
   "description": "Billing MLJNET - Sistem Manajemen ISP Terintegrasi dengan WhatsApp Gateway untuk GenieACS, Mikrotik PPPoE, dan Hotspot Management",
   "main": "app.js",
   "scripts": {

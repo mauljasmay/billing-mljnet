@@ -2,7 +2,11 @@ const express = require('express');
 const router = express.Router();
 const billingManager = require('../config/billing');
 const serviceSuspension = require('../config/serviceSuspension');
+const WebhookErrorHandler = require('../config/webhookErrorHandler');
 const fs = require('fs');
+
+// Initialize webhook error handler
+const webhookHandler = new WebhookErrorHandler();
 
 // Load settings
 function loadSettings() {
@@ -69,14 +73,26 @@ router.post('/create', async (req, res) => {
 router.post('/webhook/midtrans', async (req, res) => {
     try {
         console.log('🔍 Midtrans webhook received:', JSON.stringify(req.body, null, 2));
-        const result = await billingManager.handlePaymentWebhook({ body: req.body, headers: req.headers }, 'midtrans');
+
+        const result = await webhookHandler.processWithRetry(
+            async (payload, headers) => await billingManager.handlePaymentWebhook({ body: payload, headers }, 'midtrans'),
+            req.body,
+            req.headers,
+            'midtrans'
+        );
+
         console.log('✅ Midtrans webhook processed successfully:', result);
         res.status(200).json(result);
     } catch (error) {
         console.error('❌ Midtrans webhook error:', error);
-        res.status(500).json({
+
+        // Return appropriate HTTP status based on error type
+        const statusCode = webhookHandler.isNonRetryableError(error) ? 400 : 500;
+
+        res.status(statusCode).json({
             success: false,
-            message: error.message
+            message: error.message,
+            timestamp: new Date().toISOString()
         });
     }
 });
@@ -84,14 +100,26 @@ router.post('/webhook/midtrans', async (req, res) => {
 router.post('/webhook/xendit', async (req, res) => {
     try {
         console.log('🔍 Xendit webhook received:', JSON.stringify(req.body, null, 2));
-        const result = await billingManager.handlePaymentWebhook({ body: req.body, headers: req.headers }, 'xendit');
+
+        const result = await webhookHandler.processWithRetry(
+            async (payload, headers) => await billingManager.handlePaymentWebhook({ body: payload, headers }, 'xendit'),
+            req.body,
+            req.headers,
+            'xendit'
+        );
+
         console.log('✅ Xendit webhook processed successfully:', result);
         res.status(200).json(result);
     } catch (error) {
         console.error('❌ Xendit webhook error:', error);
-        res.status(500).json({
+
+        // Return appropriate HTTP status based on error type
+        const statusCode = webhookHandler.isNonRetryableError(error) ? 400 : 500;
+
+        res.status(statusCode).json({
             success: false,
-            message: error.message
+            message: error.message,
+            timestamp: new Date().toISOString()
         });
     }
 });
@@ -99,39 +127,49 @@ router.post('/webhook/xendit', async (req, res) => {
 router.post('/webhook/tripay', async (req, res) => {
     try {
         console.log('🔍 Universal webhook received:', JSON.stringify(req.body, null, 2));
-        
+
         // Check if this is a voucher payment based on order_id pattern
         const orderId = req.body.order_id || req.body.merchant_ref || '';
         const isVoucherPayment = orderId.includes('VCR-') || orderId.includes('VOUCHER-');
-        
+
         if (isVoucherPayment) {
             console.log('🎫 Detected voucher payment, processing voucher webhook');
-            
+
             // Import voucher webhook handler function directly
             const { handleVoucherWebhook } = require('./publicVoucher');
-            
-            // Call voucher webhook handler directly
-            try {
-                const result = await handleVoucherWebhook(req.body, req.headers);
-                console.log('🎫 Voucher webhook response:', result);
-                res.status(200).json(result);
-            } catch (voucherError) {
-                console.error('🎫 Voucher webhook error:', voucherError);
-                res.status(500).json({
-                    success: false,
-                    message: 'Voucher webhook processing failed: ' + voucherError.message
-                });
-            }
+
+            // Use webhook error handler for voucher payments too
+            const result = await webhookHandler.processWithRetry(
+                async (payload, headers) => await handleVoucherWebhook(payload, headers),
+                req.body,
+                req.headers,
+                'tripay-voucher'
+            );
+
+            console.log('🎫 Voucher webhook response:', result);
+            res.status(200).json(result);
         } else {
             console.log('💰 Processing invoice payment');
-            const result = await billingManager.handlePaymentWebhook({ body: req.body, headers: req.headers }, 'tripay');
+
+            const result = await webhookHandler.processWithRetry(
+                async (payload, headers) => await billingManager.handlePaymentWebhook({ body: payload, headers }, 'tripay'),
+                req.body,
+                req.headers,
+                'tripay'
+            );
+
             res.status(200).json(result);
         }
     } catch (error) {
         console.error('Universal webhook error:', error);
-        res.status(500).json({
+
+        // Return appropriate HTTP status based on error type
+        const statusCode = webhookHandler.isNonRetryableError(error) ? 400 : 500;
+
+        res.status(statusCode).json({
             success: false,
-            message: error.message
+            message: error.message,
+            timestamp: new Date().toISOString()
         });
     }
 });
