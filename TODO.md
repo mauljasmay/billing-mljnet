@@ -1,25 +1,59 @@
-## Voucher Database Issues Fix
+# Voucher Online Settings - Implementation Plan
 
-### Tasks
-- [x] Update voucher_online_settings with proper default profiles
-- [x] Create voucher fix script to retry stuck purchases
-- [ ] Add better error handling in webhook processing
-- [ ] Test voucher generation and payment flow
-- [ ] Verify database integrity and cleanup
+## Phase 1: Database Integrity & Core Fixes (Priority: High)
+- [x] Verify table creation is robust with proper constraints
+- [x] Add data type validation and constraints
+- [ ] Create migration script for existing installations
+- [ ] Add indexes for performance
+- [x] Fix table creation logic in getVoucherOnlineSettings()
 
-### Status
-- Analysis: Completed (Found 9 stuck purchases: 6 pending + 3 failed, 0 completed. Root cause: empty profiles in voucher_online_settings)
-- Implementation: In Progress
+## Phase 2: Validation & Error Handling (Priority: High)
+- [x] Add client-side validation for all inputs
+- [x] Implement server-side validation with proper error messages
+- [x] Add validation for agent_price and commission_amount fields
+- [ ] Add Mikrotik profile existence validation
+- [ ] Handle database connection errors gracefully
+- [ ] Add proper error responses for all endpoints
 
-# Add Future Features Section to Dashboard
+## Phase 3: UI/UX Improvements (Priority: Medium)
+- [ ] Add loading states for all AJAX operations
+- [ ] Implement better success/error feedback with toast notifications
+- [ ] Add confirmation dialogs for destructive operations
+- [ ] Improve responsive design for mobile devices
+- [ ] Fix UI elements positioning and styling
 
-## Tasks
-- [x] Add "Fitur Mendatang" section with upcoming features cards
-- [x] Position section before footer with consistent styling
-- [x] Include features like advanced monitoring, automated billing, AI support
-- [x] Test responsive display and styling integration
+## Phase 4: Bulk Operations (Priority: Medium)
+- [ ] Add "Enable All" / "Disable All" buttons
+- [ ] Implement bulk profile assignment
+- [ ] Add reset to defaults functionality
+- [ ] Add bulk edit capabilities
 
-## Status
-- Planning: Completed
-- Implementation: Completed
-- Testing: Completed
+## Phase 5: Enhanced Features (Priority: Low)
+- [ ] Add custom package ordering
+- [ ] Implement package categories/groups
+- [ ] Add usage statistics and analytics
+- [ ] Export/Import functionality
+
+## Phase 6: Security & Performance (Priority: Medium)
+- [ ] Optimize database queries
+- [ ] Add rate limiting for API endpoints
+- [ ] Implement proper input sanitization
+- [ ] Add CSRF protection
+
+## Phase 7: Testing & Quality Assurance (Priority: High)
+- [ ] Create unit tests for core functions
+- [ ] Add integration tests for end-to-end flows
+- [ ] Test cross-browser compatibility
+- [ ] Performance testing with large datasets
+
+## Files to be Modified:
+- `routes/adminHotspot.js` - Core logic improvements
+- `views/adminHotspot.ejs` - UI enhancements
+- `routes/publicVoucher.js` - Integration fixes
+- Database migration scripts
+- New utility files for validation/logging
+
+## Current Status:
+- Analysis completed
+- Plan approved by user
+- Starting with Phase 1 implementation

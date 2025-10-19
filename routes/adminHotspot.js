@@ -13,17 +13,20 @@ async function getVoucherOnlineSettings() {
     const db = new sqlite3.Database('./data/billing.db');
 
     return new Promise((resolve, reject) => {
-        // Ensure table exists
+        // Ensure table exists with proper constraints
         db.run(`
             CREATE TABLE IF NOT EXISTS voucher_online_settings (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 package_id TEXT NOT NULL UNIQUE,
                 name TEXT NOT NULL DEFAULT '',
                 profile TEXT NOT NULL,
-                digits INTEGER NOT NULL DEFAULT 5,
-                enabled INTEGER NOT NULL DEFAULT 1,
+                digits INTEGER NOT NULL DEFAULT 5 CHECK(digits >= 4 AND digits <= 8),
+                enabled INTEGER NOT NULL DEFAULT 1 CHECK(enabled IN (0,1)),
                 created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-                updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+                updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                agent_price DECIMAL(10,2) DEFAULT 0.00,
+                commission_amount DECIMAL(10,2) DEFAULT 0.00,
+                is_active BOOLEAN DEFAULT 1
             )
         `, (err) => {
             if (err) {
@@ -77,7 +80,10 @@ async function getVoucherOnlineSettings() {
                                             name: row.name || `${row.package_id} - Paket`,
                                             profile: row.profile,
                                             digits: row.digits || 5,
-                                            enabled: row.enabled === 1
+                                            enabled: row.enabled === 1,
+                                            agent_price: parseFloat(row.agent_price) || 0,
+                                            commission_amount: parseFloat(row.commission_amount) || 0,
+                                            is_active: row.is_active === 1
                                         };
                                     });
                                     db.close();
@@ -126,7 +132,10 @@ async function getVoucherOnlineSettings() {
                                             name: row.name || `${row.package_id} - Paket`,
                                             profile: row.profile,
                                             digits: row.digits || 5,
-                                            enabled: row.enabled === 1
+                                            enabled: row.enabled === 1,
+                                            agent_price: parseFloat(row.agent_price) || 0,
+                                            commission_amount: parseFloat(row.commission_amount) || 0,
+                                            is_active: row.is_active === 1
                                         };
                                     });
                                     db.close();
@@ -150,7 +159,10 @@ async function getVoucherOnlineSettings() {
                             rows.forEach(row => {
                                 settings[row.package_id] = {
                                     profile: row.profile,
-                                    enabled: row.enabled === 1
+                                    enabled: row.enabled === 1,
+                                    agent_price: parseFloat(row.agent_price) || 0,
+                                    commission_amount: parseFloat(row.commission_amount) || 0,
+                                    is_active: row.is_active === 1
                                 };
                             });
                             db.close();
@@ -735,7 +747,7 @@ router.post('/save-voucher-online-settings', async (req, res) => {
         const sqlite3 = require('sqlite3').verbose();
         const db = new sqlite3.Database('./data/billing.db');
 
-        // Ensure voucher_online_settings table exists
+        // Ensure voucher_online_settings table exists with proper constraints
         await new Promise((resolve, reject) => {
             db.run(`
                 CREATE TABLE IF NOT EXISTS voucher_online_settings (
@@ -743,10 +755,13 @@ router.post('/save-voucher-online-settings', async (req, res) => {
                     package_id TEXT NOT NULL UNIQUE,
                     name TEXT NOT NULL DEFAULT '',
                     profile TEXT NOT NULL,
-                    digits INTEGER NOT NULL DEFAULT 5,
-                    enabled INTEGER NOT NULL DEFAULT 1,
+                    digits INTEGER NOT NULL DEFAULT 5 CHECK(digits >= 4 AND digits <= 8),
+                    enabled INTEGER NOT NULL DEFAULT 1 CHECK(enabled IN (0,1)),
                     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-                    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+                    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                    agent_price DECIMAL(10,2) DEFAULT 0.00,
+                    commission_amount DECIMAL(10,2) DEFAULT 0.00,
+                    is_active BOOLEAN DEFAULT 1
                 )
             `, (err) => {
                 if (err) reject(err);
@@ -754,16 +769,58 @@ router.post('/save-voucher-online-settings', async (req, res) => {
             });
         });
 
+        // Validate settings data
+        for (const [packageId, setting] of Object.entries(settings)) {
+            if (!setting.profile || typeof setting.profile !== 'string') {
+                return res.status(400).json({
+                    success: false,
+                    message: `Profile untuk paket ${packageId} tidak valid`
+                });
+            }
+            if (setting.digits && (setting.digits < 4 || setting.digits > 8)) {
+                return res.status(400).json({
+                    success: false,
+                    message: `Digit untuk paket ${packageId} harus antara 4-8`
+                });
+            }
+            // Validate agent_price and commission_amount
+            if (setting.agent_price !== undefined && (isNaN(setting.agent_price) || setting.agent_price < 0)) {
+                return res.status(400).json({
+                    success: false,
+                    message: `Harga agen untuk paket ${packageId} harus berupa angka positif`
+                });
+            }
+            if (setting.commission_amount !== undefined && (isNaN(setting.commission_amount) || setting.commission_amount < 0)) {
+                return res.status(400).json({
+                    success: false,
+                    message: `Komisi untuk paket ${packageId} harus berupa angka positif`
+                });
+            }
+        }
+
         // Update settings for each package
         const promises = Object.keys(settings).map(packageId => {
             const setting = settings[packageId];
             return new Promise((resolve, reject) => {
                 const sql = `
                     INSERT OR REPLACE INTO voucher_online_settings
-                    (package_id, name, profile, digits, enabled, updated_at)
-                    VALUES (?, ?, ?, ?, ?, datetime('now'))
+                    (package_id, name, profile, digits, enabled, agent_price, commission_amount, is_active, updated_at)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))
                 `;
-                db.run(sql, [packageId, setting.name || `${packageId} - Paket`, setting.profile, setting.digits || 5, setting.enabled ? 1 : 0], function(err) {
+                const agentPrice = parseFloat(setting.agent_price) || 0;
+                const commissionAmount = parseFloat(setting.commission_amount) || 0;
+                const isActive = setting.is_active !== undefined ? setting.is_active : true;
+
+                db.run(sql, [
+                    packageId,
+                    setting.name || `${packageId} - Paket`,
+                    setting.profile,
+                    setting.digits || 5,
+                    setting.enabled ? 1 : 0,
+                    agentPrice,
+                    commissionAmount,
+                    isActive ? 1 : 0
+                ], function(err) {
                     if (err) reject(err);
                     else resolve();
                 });
