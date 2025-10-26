@@ -1,5 +1,5 @@
 /**
- * Billing MLJNET Mobile Utilities
+ * GEMBOK-BILLING Mobile Utilities
  * Mobile-First Responsive JavaScript Functions
  * ===========================================
  */

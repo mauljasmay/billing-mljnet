@@ -39,7 +39,7 @@ class AgentWhatsAppManager {
             }
 
             const settings = getSettingsWithCache();
-            const companyHeader = settings.company_header || settings.app_name || 'Billing MLJNET';
+            const companyHeader = settings.company_header || settings.app_name || 'GEMBOK-BILLING';
             const formattedHeader = companyHeader.includes('📱') ? companyHeader + '\n\n' : `📱 ${companyHeader} 📱\n\n`;
             const footerInfo = '\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n' + (settings.footer_info || 'Powered by Alijaya Digital Network');
 
@@ -101,7 +101,7 @@ class AgentWhatsAppManager {
             }
 
             const settings = getSettingsWithCache();
-            const companyHeader = settings.company_header || settings.app_name || 'Billing MLJNET';
+            const companyHeader = settings.company_header || settings.app_name || 'GEMBOK-BILLING';
             const formattedHeader = companyHeader.includes('📱') ? companyHeader + '\n\n' : `📱 ${companyHeader} 📱\n\n`;
             const footerInfo = '\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n' + (settings.footer_info || 'Powered by Alijaya Digital Network');
 
@@ -151,7 +151,7 @@ class AgentWhatsAppManager {
             }
 
             const settings = getSettingsWithCache();
-            const companyHeader = settings.company_header || settings.app_name || 'Billing MLJNET';
+            const companyHeader = settings.company_header || settings.app_name || 'GEMBOK-BILLING';
             const formattedHeader = companyHeader.includes('📱') ? companyHeader + '\n\n' : `📱 ${companyHeader} 📱\n\n`;
             const footerInfo = '\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n' + (settings.footer_info || 'Powered by Alijaya Digital Network');
 
@@ -210,7 +210,7 @@ class AgentWhatsAppManager {
             }
 
             const settings = getSettingsWithCache();
-            const companyHeader = settings.company_header || settings.app_name || 'Billing MLJNET';
+            const companyHeader = settings.company_header || settings.app_name || 'GEMBOK-BILLING';
             const formattedHeader = companyHeader.includes('📱') ? companyHeader + '\n\n' : `📱 ${companyHeader} 📱\n\n`;
             const footerInfo = '\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n' + (settings.footer_info || 'Powered by Alijaya Digital Network');
 
@@ -247,7 +247,7 @@ class AgentWhatsAppManager {
             }
 
             const settings = getSettingsWithCache();
-            const companyHeader = settings.company_header || settings.app_name || 'Billing MLJNET';
+            const companyHeader = settings.company_header || settings.app_name || 'GEMBOK-BILLING';
             const formattedHeader = companyHeader.includes('📱') ? companyHeader + '\n\n' : `📱 ${companyHeader} 📱\n\n`;
             const footerInfo = '\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n' + (settings.footer_info || 'Powered by Alijaya Digital Network');
 
@@ -286,7 +286,7 @@ class AgentWhatsAppManager {
             }
 
             const settings = getSettingsWithCache();
-            const companyHeader = settings.company_header || settings.app_name || 'Billing MLJNET';
+            const companyHeader = settings.company_header || settings.app_name || 'GEMBOK-BILLING';
             const formattedHeader = companyHeader.includes('📱') ? companyHeader + '\n\n' : `📱 ${companyHeader} 📱\n\n`;
             const footerInfo = '\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n' + (settings.footer_info || 'Powered by Alijaya Digital Network');
 

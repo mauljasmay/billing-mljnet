@@ -1,7 +1,7 @@
 {
-  "name": "Billing MLJNET Agent",
+  "name": "GEMBOK-BILL Agent",
   "short_name": "Agent",
-  "description": "Aplikasi agent untuk sistem billing Billing MLJNET",
+  "description": "Aplikasi agent untuk sistem billing GEMBOK-BILL",
   "start_url": "/agent/dashboard",
   "display": "standalone",
   "background_color": "#ffffff",

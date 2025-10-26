@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- PWA Meta Tags -->
-    <meta name="description" content="Dashboard agent untuk sistem billing Billing MLJNET">
+    <meta name="description" content="Dashboard agent untuk sistem billing GEMBOK-BILL">
     <meta name="theme-color" content="#667eea">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -104,6 +104,7 @@
         
         .nav-item span {
             font-size: 0.75rem;
+        }
         .transaction-item {
             background: white;
             border-radius: 10px;
@@ -527,7 +528,7 @@
             }
             
             // Show loading
-            const submitBtn = isModal ? document.getElementById('submitRequestBtn') : this.querySelector('button[type="submit"]');
+            const submitBtn = isModal ? document.getElementById('submitRequestBtn') : form.querySelector('button[type="submit"]');
             const originalText = submitBtn.innerHTML;
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Mengirim...';
             submitBtn.disabled = true;
@@ -538,7 +539,11 @@
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(data)
+                body: JSON.stringify({
+                    requestAmount: data.requestAmount,
+                    requestReason: data.requestReason,
+                    requestNotes: data.requestNotes || ''
+                })
             })
             .then(response => response.json())
             .then(data => {
@@ -614,5 +619,4 @@
     <script src="/js/agent-pwa.js"></script>
 </body>
 </html>
-
 

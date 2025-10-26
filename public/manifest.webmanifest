@@ -1,5 +1,5 @@
 {
-  "name": "Portal Pelanggan Billing MLJNET",
+  "name": "Portal Pelanggan",
   "short_name": "Pelanggan",
   "start_url": "/customer/dashboard",
   "scope": "/",

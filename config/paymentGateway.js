@@ -526,34 +526,31 @@ class TripayGateway {
         
         console.log(`[TRIPAY] Customer name sanitization: "${customerName}" -> "${sanitizedCustomerName}" (length: ${customerName.length} -> ${sanitizedCustomerName.length})`);
         
-        // Penyesuaian format nomor telepon khusus beberapa metode e-wallet
+        // Simplified phone number formatting for Tripay
         try {
             const digitsOnly = customerPhone.replace(/\D/g, '');
             if (String(selectedMethod).toUpperCase() === 'DANA') {
-                // DANA cenderung lebih stabil dengan format lokal 08xxxxxxxxxx
+                // DANA requires local format starting with '0', 10-13 digits
                 if (digitsOnly.startsWith('62')) {
                     customerPhone = '0' + digitsOnly.slice(2);
-                } else if (!digitsOnly.startsWith('0') && digitsOnly.length >= 9) {
+                } else if (!digitsOnly.startsWith('0')) {
                     customerPhone = '0' + digitsOnly;
                 } else {
                     customerPhone = digitsOnly;
                 }
 
-                // Enforce length between 10-13 digits for DANA
-                const danaDigits = customerPhone.replace(/\D/g, '');
-                if (danaDigits.length < 10) {
-                    // pad conservatively by duplicating last digit
-                    const padLen = 10 - danaDigits.length;
-                    customerPhone = danaDigits + (danaDigits.slice(-1) || '0').repeat(padLen);
-                } else if (danaDigits.length > 13) {
-                    // trim to last 12 digits and ensure starts with 08
-                    const last12 = danaDigits.slice(-12);
-                    customerPhone = last12.startsWith('8') ? ('0' + last12) : ('0' + last12.replace(/^\d/, '8'));
+                // Ensure length is between 10-13 digits
+                if (customerPhone.length < 10) {
+                    customerPhone = customerPhone.padEnd(10, '0');
+                } else if (customerPhone.length > 13) {
+                    customerPhone = customerPhone.slice(0, 13);
                 }
             } else {
-                // Metode lain tetap gunakan nomor bersih (tanpa simbol), prioritaskan E164 sederhana tanpa +
+                // Other methods use international format starting with '62'
                 if (digitsOnly.startsWith('0')) {
                     customerPhone = '62' + digitsOnly.slice(1);
+                } else if (!digitsOnly.startsWith('62')) {
+                    customerPhone = '62' + digitsOnly;
                 } else {
                     customerPhone = digitsOnly;
                 }
@@ -574,7 +571,7 @@ class TripayGateway {
                 price: parseInt(invoice.amount),
                 quantity: 1
             }],
-            callback_url: paymentType === 'voucher' ? `${appBaseUrl}/voucher/payment-webhook` : `${appBaseUrl}/payment/webhook/tripay`,
+            callback_url: `${appBaseUrl}/payment/webhook/tripay`,
             return_url: paymentType === 'voucher' ? `${appBaseUrl}/voucher/finish` : `${appBaseUrl}/payment/finish`
         };
 

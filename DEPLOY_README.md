@@ -1,11 +1,11 @@
-# 🚀 Billing MLJNET - Deploy Guide
+# 🚀 GEMBOK-BILL - Deploy Guide
 
 ## 📋 Quick Deploy
 
 ### 1. Clone Repository
 ```bash
-git clone https://github.com/alijayanet/Billing MLJNET
-cd Billing MLJNET
+git clone https://github.com/alijayanet/gembok-bill
+cd gembok-bill
 ```
 
 ### 2. Install Dependencies
@@ -38,7 +38,7 @@ npm run dev
 npm start
 
 # Atau dengan PM2
-pm2 start app.js --name Billing MLJNET
+pm2 start app.js --name gembok-bill
 pm2 save
 pm2 startup
 ```
@@ -112,7 +112,7 @@ npm install
 ```bash
 # Hapus session dan restart
 rm -rf whatsapp-session/
-pm2 restart Billing MLJNET
+pm2 restart gembok-bill
 ```
 
 ## 📞 Support
@@ -123,5 +123,4 @@ pm2 restart Billing MLJNET
 
 ---
 
-**Billing MLJNET v2.1.1** - WhatsApp Modular + Role System + Network Mapping
-
+**GEMBOK-BILL v2.1.1** - WhatsApp Modular + Role System + Network Mapping

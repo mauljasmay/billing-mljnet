@@ -3197,7 +3197,7 @@ async handlePaymentWebhook(payload, gateway) {
             reject(error);
         }
     });
-}
+    }
 
     async getFinancialReport(startDate, endDate, type = 'all') {
         return new Promise((resolve, reject) => {

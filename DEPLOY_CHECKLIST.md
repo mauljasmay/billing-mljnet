@@ -27,8 +27,8 @@
 
 ### 1. Clone dari GitHub
 ```bash
-git clone https://github.com/alijayanet/Billing MLJNET
-cd Billing MLJNET
+git clone https://github.com/alijayanet/gembok-bill
+cd gembok-bill
 ```
 
 ### 2. Install Dependencies
@@ -58,7 +58,7 @@ npm run dev
 npm start
 
 # Atau dengan PM2
-pm2 start app.js --name Billing MLJNET
+pm2 start app.js --name gembok-bill
 ```
 
 ## 🔧 Post-Deploy Verification
@@ -104,4 +104,3 @@ pm2 start app.js --name Billing MLJNET
 - Cek permissions direktori backup/
 - Cek disk space
 - Cek log aplikasi
-

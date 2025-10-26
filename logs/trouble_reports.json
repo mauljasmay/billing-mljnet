@@ -200,16 +200,5 @@
     "location": "Test Location - Cek Notifikasi",
     "category": "Test Category",
     "description": "TEST MANUAL: Cek apakah notifikasi WhatsApp ke teknisi berjalan dengan benar."
-  },
-  {
-    "id": "TR59314824G",
-    "status": "open",
-    "createdAt": "2025-10-08T15:16:33.148Z",
-    "updatedAt": "2025-10-08T15:16:33.148Z",
-    "phone": "628989718552",
-    "name": "Maulana ramadhan",
-    "location": "kemayoran",
-    "category": "Internet Lambat",
-    "description": "TEST"
   }
 ]

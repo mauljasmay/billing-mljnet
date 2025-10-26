@@ -112,7 +112,7 @@ cp /path/to/server/data/billing.db /path/to/server/data/backup/server_backup_$(d
 
 # 2. Stop aplikasi (jika menggunakan PM2)
 echo "⏹️  Menghentikan aplikasi..."
-pm2 stop Billing MLJNET || true
+pm2 stop gembok-bill || true
 
 # 3. Upload file backup baru
 echo "📤 Mengupload database baru..."
@@ -129,11 +129,11 @@ chown www-data:www-data /path/to/server/data/billing.db
 
 # 6. Start aplikasi
 echo "▶️  Menjalankan aplikasi..."
-pm2 start Billing MLJNET
+pm2 start gembok-bill
 
 # 7. Verifikasi
 echo "✅ Verifikasi deploy..."
-pm2 status Billing MLJNET
+pm2 status gembok-bill
 
 echo "🎉 Deploy selesai!"
 `;
@@ -158,7 +158,7 @@ echo "🔄 Memulai restore database di server..."
 
 # 1. Stop aplikasi
 echo "⏹️  Menghentikan aplikasi..."
-pm2 stop Billing MLJNET || true
+pm2 stop gembok-bill || true
 
 # 2. Backup database saat ini
 echo "📋 Backup database saat ini..."
@@ -175,11 +175,11 @@ chown www-data:www-data /path/to/server/data/billing.db
 
 # 5. Start aplikasi
 echo "▶️  Menjalankan aplikasi..."
-pm2 start Billing MLJNET
+pm2 start gembok-bill
 
 # 6. Verifikasi
 echo "✅ Verifikasi restore..."
-pm2 status Billing MLJNET
+pm2 status gembok-bill
 
 echo "🎉 Restore selesai!"
 `;
@@ -224,7 +224,7 @@ echo "Total ODPs: $ODP_COUNT"
 
 # 5. Cek status aplikasi
 echo "🔍 Cek status aplikasi..."
-pm2 status Billing MLJNET
+pm2 status gembok-bill
 
 echo "✅ Validasi selesai!"
 `;
@@ -278,7 +278,7 @@ chmod +x *.sh
 ./validate_*.sh
 
 # Cek log aplikasi
-pm2 logs Billing MLJNET
+pm2 logs gembok-bill
 
 # Test aplikasi
 curl http://localhost:3003/admin
@@ -370,4 +370,3 @@ if (require.main === module) {
 }
 
 module.exports = ServerSyncFixer;
-

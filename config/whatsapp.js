@@ -1,5 +1,5 @@
 const { Boom } = require('@hapi/boom');
-const { default: makeWASocket, DisconnectReason, useMultiFileAuthState } = require('@whiskeysockets/baileys');
+const { makeWASocket, DisconnectReason, useMultiFileAuthState, fetchLatestBaileysVersion } = require('@whiskeysockets/baileys');
 const qrcode = require('qrcode-terminal');
 const path = require('path');
 const axios = require('axios');
@@ -162,7 +162,13 @@ function formatWithHeaderFooter(message) {
     } catch (error) {
         console.error('Error formatting message with header/footer:', error);
         // Fallback ke format default jika ada error
-        return `📱 ALIJAYA DIGITAL NETWORK 📱\n\n${message}\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\nPowered by Alijaya Digital Network`;
+        return `📱 ALIJAYA DIGITAL NETWORK 📱
+
+${message}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Powered by Alijaya Digital Network`;
     }
 }
 
@@ -358,6 +364,25 @@ async function connectToWhatsApp() {
         
         const { state, saveCreds } = authState;
         
+        // Penanganan versi dengan error handling yang lebih baik
+        let version;
+        try {
+            const versionResult = await fetchLatestBaileysVersion();
+            // Tangani berbagai tipe return value
+            if (Array.isArray(versionResult)) {
+                version = versionResult;
+            } else if (versionResult && Array.isArray(versionResult.version)) {
+                version = versionResult.version;
+            } else {
+                // Fallback ke versi default jika fetching gagal
+                version = [2, 3000, 1023223821];
+            }
+            console.log(`📱 Using WhatsApp Web version: ${version.join('.')}`);
+        } catch (error) {
+            console.warn(`⚠️ Failed to fetch latest WhatsApp version, using fallback:`, error.message);
+            version = [2, 3000, 1023223821];
+        }
+
         sock = makeWASocket({
             auth: state,
             logger,
@@ -365,8 +390,10 @@ async function connectToWhatsApp() {
             connectTimeoutMs: 60000,
             qrTimeout: 40000,
             defaultQueryTimeoutMs: 30000, // Timeout untuk query
-            retryRequestDelayMs: 1000
+            retryRequestDelayMs: 1000,
+            version: version
         });
+
         
 
 

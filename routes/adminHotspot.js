@@ -13,20 +13,20 @@ async function getVoucherOnlineSettings() {
     const db = new sqlite3.Database('./data/billing.db');
 
     return new Promise((resolve, reject) => {
-        // Ensure table exists with proper constraints
+        // Ensure table exists
         db.run(`
             CREATE TABLE IF NOT EXISTS voucher_online_settings (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 package_id TEXT NOT NULL UNIQUE,
                 name TEXT NOT NULL DEFAULT '',
                 profile TEXT NOT NULL,
-                digits INTEGER NOT NULL DEFAULT 5 CHECK(digits >= 4 AND digits <= 8),
-                enabled INTEGER NOT NULL DEFAULT 1 CHECK(enabled IN (0,1)),
+                digits INTEGER NOT NULL DEFAULT 5,
+                price INTEGER DEFAULT 0,
+                duration INTEGER DEFAULT 24,
+                duration_type TEXT DEFAULT 'hours',
+                enabled INTEGER NOT NULL DEFAULT 1,
                 created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-                updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-                agent_price DECIMAL(10,2) DEFAULT 0.00,
-                commission_amount DECIMAL(10,2) DEFAULT 0.00,
-                is_active BOOLEAN DEFAULT 1
+                updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
             )
         `, (err) => {
             if (err) {
@@ -46,19 +46,19 @@ async function getVoucherOnlineSettings() {
                             : 'default';
                         
                         const defaultSettings = [
-                            ['3k', '3rb - 1 Hari', defaultProfile, 5, 1],
-                            ['5k', '5rb - 2 Hari', defaultProfile, 5, 1],
-                            ['10k', '10rb - 5 Hari', defaultProfile, 5, 1],
-                            ['15k', '15rb - 8 Hari', defaultProfile, 5, 1],
-                            ['25k', '25rb - 15 Hari', defaultProfile, 5, 1],
-                            ['50k', '50rb - 30 Hari', defaultProfile, 5, 1]
+                            ['3k', '3rb - 1 Hari', defaultProfile, 5, 0, 24, 'hours', 1],
+                            ['5k', '5rb - 2 Hari', defaultProfile, 5, 0, 48, 'hours', 1],
+                            ['10k', '10rb - 5 Hari', defaultProfile, 5, 0, 120, 'hours', 1],
+                            ['15k', '15rb - 8 Hari', defaultProfile, 5, 0, 192, 'hours', 1],
+                            ['25k', '25rb - 15 Hari', defaultProfile, 5, 0, 360, 'hours', 1],
+                            ['50k', '50rb - 30 Hari', defaultProfile, 5, 0, 720, 'hours', 1]
                         ];
 
-                        const insertPromises = defaultSettings.map(([packageId, name, profile, digits, enabled]) => {
+                        const insertPromises = defaultSettings.map(([packageId, name, profile, digits, price, duration, duration_type, enabled]) => {
                             return new Promise((resolveInsert, rejectInsert) => {
                                 db.run(
-                                    'INSERT OR IGNORE INTO voucher_online_settings (package_id, name, profile, digits, enabled) VALUES (?, ?, ?, ?, ?)',
-                                    [packageId, name, profile, digits, enabled],
+                                    'INSERT OR IGNORE INTO voucher_online_settings (package_id, name, profile, digits, price, duration, duration_type, enabled) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+                                    [packageId, name, profile, digits, price, duration, duration_type, enabled],
                                     (err) => {
                                         if (err) rejectInsert(err);
                                         else resolveInsert();
@@ -80,10 +80,10 @@ async function getVoucherOnlineSettings() {
                                             name: row.name || `${row.package_id} - Paket`,
                                             profile: row.profile,
                                             digits: row.digits || 5,
-                                            enabled: row.enabled === 1,
-                                            agent_price: parseFloat(row.agent_price) || 0,
-                                            commission_amount: parseFloat(row.commission_amount) || 0,
-                                            is_active: row.is_active === 1
+                                            price: row.price || 0,
+                                            duration: row.duration || 24,
+                                            duration_type: row.duration_type || 'hours',
+                                            enabled: row.enabled === 1
                                         };
                                     });
                                     db.close();
@@ -99,19 +99,19 @@ async function getVoucherOnlineSettings() {
                         console.error('Error getting Mikrotik profiles for default settings:', err);
                         // Fallback to hardcoded defaults
                         const fallbackSettings = [
-                            ['3k', '3rb - 1 Hari', 'default', 5, 1],
-                            ['5k', '5rb - 2 Hari', 'default', 5, 1],
-                            ['10k', '10rb - 5 Hari', 'default', 5, 1],
-                            ['15k', '15rb - 8 Hari', 'default', 5, 1],
-                            ['25k', '25rb - 15 Hari', 'default', 5, 1],
-                            ['50k', '50rb - 30 Hari', 'default', 5, 1]
+                            ['3k', '3rb - 1 Hari', 'default', 5, 0, 24, 'hours', 1],
+                            ['5k', '5rb - 2 Hari', 'default', 5, 0, 48, 'hours', 1],
+                            ['10k', '10rb - 5 Hari', 'default', 5, 0, 120, 'hours', 1],
+                            ['15k', '15rb - 8 Hari', 'default', 5, 0, 192, 'hours', 1],
+                            ['25k', '25rb - 15 Hari', 'default', 5, 0, 360, 'hours', 1],
+                            ['50k', '50rb - 30 Hari', 'default', 5, 0, 720, 'hours', 1]
                         ];
                         
-                        const insertPromises = fallbackSettings.map(([packageId, name, profile, digits, enabled]) => {
+                        const insertPromises = fallbackSettings.map(([packageId, name, profile, digits, price, duration, duration_type, enabled]) => {
                             return new Promise((resolveInsert, rejectInsert) => {
                                 db.run(
-                                    'INSERT OR IGNORE INTO voucher_online_settings (package_id, name, profile, digits, enabled) VALUES (?, ?, ?, ?, ?)',
-                                    [packageId, name, profile, digits, enabled],
+                                    'INSERT OR IGNORE INTO voucher_online_settings (package_id, name, profile, digits, price, duration, duration_type, enabled) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+                                    [packageId, name, profile, digits, price, duration, duration_type, enabled],
                                     (err) => {
                                         if (err) rejectInsert(err);
                                         else resolveInsert();
@@ -132,10 +132,10 @@ async function getVoucherOnlineSettings() {
                                             name: row.name || `${row.package_id} - Paket`,
                                             profile: row.profile,
                                             digits: row.digits || 5,
-                                            enabled: row.enabled === 1,
-                                            agent_price: parseFloat(row.agent_price) || 0,
-                                            commission_amount: parseFloat(row.commission_amount) || 0,
-                                            is_active: row.is_active === 1
+                                            price: row.price || 0,
+                                            duration: row.duration || 24,
+                                            duration_type: row.duration_type || 'hours',
+                                            enabled: row.enabled === 1
                                         };
                                     });
                                     db.close();
@@ -158,11 +158,13 @@ async function getVoucherOnlineSettings() {
                             const settings = {};
                             rows.forEach(row => {
                                 settings[row.package_id] = {
+                                    name: row.name || `${row.package_id} - Paket`,
                                     profile: row.profile,
-                                    enabled: row.enabled === 1,
-                                    agent_price: parseFloat(row.agent_price) || 0,
-                                    commission_amount: parseFloat(row.commission_amount) || 0,
-                                    is_active: row.is_active === 1
+                                    digits: row.digits || 5,
+                                    price: row.price || 0,
+                                    duration: row.duration || 24,
+                                    duration_type: row.duration_type || 'hours',
+                                    enabled: row.enabled === 1
                                 };
                             });
                             db.close();
@@ -228,7 +230,9 @@ router.get('/', async (req, res) => {
             error: req.query.error,
             company_header,
             adminKontak,
-            settings
+            settings,
+            versionInfo: getVersionInfo(),
+            versionBadge: getVersionBadge()
         });
     } catch (error) {
         res.render('adminHotspot', { users: [], profiles: [], allUsers: [], success: null, error: 'Gagal mengambil data user hotspot: ' + error.message });
@@ -453,10 +457,14 @@ router.get('/voucher', async (req, res) => {
         const company_header = settings.company_header || 'Voucher Hotspot';
         const adminKontak = settings['footer_info'] || '-';
         
+        // Ambil setting voucher online
+        const voucherOnlineSettings = await getVoucherOnlineSettings();
+        
         res.render('adminVoucher', {
             profiles,
             servers,
             voucherHistory,
+            voucherOnlineSettings,
             success: req.query.success,
             error: req.query.error,
             company_header,
@@ -469,6 +477,7 @@ router.get('/voucher', async (req, res) => {
             profiles: [],
             servers: [],
             voucherHistory: [],
+            voucherOnlineSettings: {},
             success: null,
             error: 'Gagal memuat halaman voucher: ' + error.message
         });
@@ -747,7 +756,7 @@ router.post('/save-voucher-online-settings', async (req, res) => {
         const sqlite3 = require('sqlite3').verbose();
         const db = new sqlite3.Database('./data/billing.db');
 
-        // Ensure voucher_online_settings table exists with proper constraints
+        // Ensure voucher_online_settings table exists with duration columns
         await new Promise((resolve, reject) => {
             db.run(`
                 CREATE TABLE IF NOT EXISTS voucher_online_settings (
@@ -755,13 +764,13 @@ router.post('/save-voucher-online-settings', async (req, res) => {
                     package_id TEXT NOT NULL UNIQUE,
                     name TEXT NOT NULL DEFAULT '',
                     profile TEXT NOT NULL,
-                    digits INTEGER NOT NULL DEFAULT 5 CHECK(digits >= 4 AND digits <= 8),
-                    enabled INTEGER NOT NULL DEFAULT 1 CHECK(enabled IN (0,1)),
+                    digits INTEGER NOT NULL DEFAULT 5,
+                    price INTEGER DEFAULT 0,
+                    duration INTEGER DEFAULT 24,
+                    duration_type TEXT DEFAULT 'hours',
+                    enabled INTEGER NOT NULL DEFAULT 1,
                     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-                    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-                    agent_price DECIMAL(10,2) DEFAULT 0.00,
-                    commission_amount DECIMAL(10,2) DEFAULT 0.00,
-                    is_active BOOLEAN DEFAULT 1
+                    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
                 )
             `, (err) => {
                 if (err) reject(err);
@@ -769,57 +778,24 @@ router.post('/save-voucher-online-settings', async (req, res) => {
             });
         });
 
-        // Validate settings data
-        for (const [packageId, setting] of Object.entries(settings)) {
-            if (!setting.profile || typeof setting.profile !== 'string') {
-                return res.status(400).json({
-                    success: false,
-                    message: `Profile untuk paket ${packageId} tidak valid`
-                });
-            }
-            if (setting.digits && (setting.digits < 4 || setting.digits > 8)) {
-                return res.status(400).json({
-                    success: false,
-                    message: `Digit untuk paket ${packageId} harus antara 4-8`
-                });
-            }
-            // Validate agent_price and commission_amount
-            if (setting.agent_price !== undefined && (isNaN(setting.agent_price) || setting.agent_price < 0)) {
-                return res.status(400).json({
-                    success: false,
-                    message: `Harga agen untuk paket ${packageId} harus berupa angka positif`
-                });
-            }
-            if (setting.commission_amount !== undefined && (isNaN(setting.commission_amount) || setting.commission_amount < 0)) {
-                return res.status(400).json({
-                    success: false,
-                    message: `Komisi untuk paket ${packageId} harus berupa angka positif`
-                });
-            }
-        }
-
         // Update settings for each package
         const promises = Object.keys(settings).map(packageId => {
             const setting = settings[packageId];
             return new Promise((resolve, reject) => {
                 const sql = `
                     INSERT OR REPLACE INTO voucher_online_settings
-                    (package_id, name, profile, digits, enabled, agent_price, commission_amount, is_active, updated_at)
+                    (package_id, name, profile, digits, price, duration, duration_type, enabled, updated_at)
                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))
                 `;
-                const agentPrice = parseFloat(setting.agent_price) || 0;
-                const commissionAmount = parseFloat(setting.commission_amount) || 0;
-                const isActive = setting.is_active !== undefined ? setting.is_active : true;
-
                 db.run(sql, [
-                    packageId,
-                    setting.name || `${packageId} - Paket`,
-                    setting.profile,
-                    setting.digits || 5,
-                    setting.enabled ? 1 : 0,
-                    agentPrice,
-                    commissionAmount,
-                    isActive ? 1 : 0
+                    packageId, 
+                    setting.name || `${packageId} - Paket`, 
+                    setting.profile, 
+                    setting.digits || 5, 
+                    setting.price || 0,
+                    setting.duration || 24,
+                    setting.duration_type || 'hours',
+                    setting.enabled ? 1 : 0
                 ], function(err) {
                     if (err) reject(err);
                     else resolve();
@@ -943,6 +919,64 @@ router.post('/test-voucher-generation', async (req, res) => {
         res.status(500).json({
             success: false,
             message: 'Gagal test generate voucher: ' + error.message
+        });
+    }
+});
+
+// POST: Save voucher online settings from /admin/hotspot/voucher page
+router.post('/save-voucher-online-settings-from-voucher', async (req, res) => {
+    try {
+        const settings = req.body.settings;
+
+        if (!settings || typeof settings !== 'object') {
+            return res.status(400).json({
+                success: false,
+                message: 'Settings data tidak valid'
+            });
+        }
+
+        const sqlite3 = require('sqlite3').verbose();
+        const db = new sqlite3.Database('./data/billing.db');
+
+        // Update settings for each package
+        const promises = Object.keys(settings).map(packageId => {
+            const setting = settings[packageId];
+            return new Promise((resolve, reject) => {
+                const sql = `
+                    INSERT OR REPLACE INTO voucher_online_settings
+                    (package_id, name, profile, digits, price, duration, duration_type, enabled, updated_at)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))
+                `;
+                db.run(sql, [
+                    packageId, 
+                    setting.name || `${packageId} - Paket`, 
+                    setting.profile, 
+                    setting.digits || 5, 
+                    setting.price || 0,
+                    setting.duration || 24,
+                    setting.duration_type || 'hours',
+                    setting.enabled ? 1 : 0
+                ], function(err) {
+                    if (err) reject(err);
+                    else resolve();
+                });
+            });
+        });
+
+        await Promise.all(promises);
+
+        db.close();
+
+        res.json({
+            success: true,
+            message: 'Setting voucher online berhasil disimpan'
+        });
+
+    } catch (error) {
+        console.error('Error saving voucher online settings:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Gagal menyimpan setting voucher online: ' + error.message
         });
     }
 });

@@ -2,7 +2,7 @@
 
 Tanggal: 2025-08-11
 
-Repo: https://github.com/alijayanet/Billing MLJNET
+Repo: https://github.com/alijayanet/gembok-bill
 
 ## Changelog (v1.2.0)
 - feat(packages): ganti input profil PPPoE jadi dropdown dan load dari Mikrotik
@@ -125,4 +125,3 @@ git push origin v1.2.0
 
 ---
 Jika ada masalah atau ingin menambah fitur baru (misal, indikator loading/disable sementara saat fetch/simpan), beri tahu agar saya sesuaikan.
-

@@ -2,7 +2,7 @@
 
 ## Masalah
 ```
-Error: /home/alijaya/Billing MLJNET/node_modules/sqlite3/build/Release/node_sqlite3.node: invalid ELF header
+Error: /home/alijaya/gembok-bill/node_modules/sqlite3/build/Release/node_sqlite3.node: invalid ELF header
 ```
 
 ## Penyebab
@@ -66,7 +66,7 @@ npm install sqlite3 --build-from-source --sqlite=/usr
 
 ```bash
 # Masuk ke direktori aplikasi
-cd ~/Billing MLJNET
+cd ~/gembok-bill
 
 # Quick fix 1: Rebuild otomatis
 npm rebuild
@@ -124,10 +124,9 @@ npm install sqlite3
 
 Jika masih mengalami masalah:
 - **WhatsApp:** 081947215703
-- **GitHub Issues:** [Buat Issue](https://github.com/alijayanet/Billing MLJNET/issues)
+- **GitHub Issues:** [Buat Issue](https://github.com/alijayanet/gembok-bill/issues)
 - **Telegram:** [https://t.me/alijayaNetAcs](https://t.me/alijayaNetAcs)
 
 ---
 
 **🎯 Dengan mengikuti langkah di atas, aplikasi akan berjalan normal di server Linux baru!**
-

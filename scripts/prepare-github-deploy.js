@@ -114,11 +114,11 @@ chmod 644 settings.json
 
 # 5. Restart aplikasi (jika menggunakan PM2)
 echo "🔄 Restart aplikasi..."
-pm2 restart billing-mljnet || pm2 start app.js --name billing-mljnet
+pm2 restart gembok-bill || pm2 start app.js --name gembok-bill
 
 # 6. Verifikasi
 echo "✅ Verifikasi deploy..."
-pm2 status billing-mljnet
+pm2 status gembok-bill
 
 echo "🎉 Deploy selesai!"
 `;
@@ -156,9 +156,9 @@ echo "🎉 Deploy selesai!"
             "rx_power_critical": "-37",
             "rx_power_notification_enable": true,
             "rx_power_warning_interval": "36000000",
-            "company_header": "MLJNET",
-            "footer_info": "Info admin@mljnet.id",
-            "app_name": "Billing MLJNET",
+            "company_header": "GEMBOK-BILL",
+            "footer_info": "Info Hubungi : 081947215703",
+            "app_name": "GEMBOK-BILLING",
             "customerPortalOtp": false,
             "otp_length": "4",
             "otp_expiry_minutes": "5",
@@ -243,7 +243,7 @@ echo "🎉 Deploy selesai!"
                 "log_cleanup_actions": true
             },
             "hotspot_config": {
-                "wifi_name": "MLJNET-WIFI",
+                "wifi_name": "GEMBOK-WIFI",
                 "hotspot_url": "http://SERVER_IP",
                 "hotspot_ip": "SERVER_IP"
             }
@@ -259,14 +259,14 @@ echo "🎉 Deploy selesai!"
     async createReadmeForDeploy() {
         console.log('📖 Membuat README untuk deploy...');
         
-# 🚀 Billing MLJNET - Deploy Guide
+        const readmeContent = `# 🚀 GEMBOK-BILL - Deploy Guide
 
 ## 📋 Quick Deploy
 
 ### 1. Clone Repository
 \`\`\`bash
-git clone https://github.com/mauljasmay/billing-mljnet
-cd billing-mljnet
+git clone https://github.com/alijayanet/gembok-bill
+cd gembok-bill
 \`\`\`
 
 ### 2. Install Dependencies
@@ -299,7 +299,7 @@ npm run dev
 npm start
 
 # Atau dengan PM2
-pm2 start app.js --name Billing MLJNET
+pm2 start app.js --name gembok-bill
 pm2 save
 pm2 startup
 \`\`\`
@@ -373,7 +373,7 @@ npm install
 \`\`\`bash
 # Hapus session dan restart
 rm -rf whatsapp-session/
-pm2 restart Billing MLJNET
+pm2 restart gembok-bill
 \`\`\`
 
 ## 📞 Support
@@ -384,7 +384,7 @@ pm2 restart Billing MLJNET
 
 ---
 
-**Billing MLJNET v2.1.0** - WhatsApp Modular + Role System + Network Mapping
+**GEMBOK-BILL v2.1.1** - WhatsApp Modular + Role System + Network Mapping
 `;
 
         const readmeFile = path.join(this.projectRoot, 'DEPLOY_README.md');
@@ -404,7 +404,7 @@ pm2 restart Billing MLJNET
             // Tambahkan scripts untuk deploy
             packageJson.scripts = {
                 ...packageJson.scripts,
-                "deploy": "git pull origin main && npm install && pm2 restart billing-mljnet",
+                "deploy": "git pull origin main && npm install && pm2 restart gembok-bill",
                 "backup": "node scripts/fix-backup-restore.js",
                 "sync": "node scripts/sync-server-data.js",
                 "check": "node scripts/check-deploy-readiness.js"
@@ -472,4 +472,3 @@ if (require.main === module) {
 }
 
 module.exports = GitHubDeployPreparer;
-

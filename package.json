@@ -1,18 +1,24 @@
 {
-  "name": "billing-mljnet",
-  "version": "3.1.10",
-  "description": "Billing MLJNET - Sistem Manajemen ISP Terintegrasi dengan WhatsApp Gateway untuk GenieACS, Mikrotik PPPoE, dan Hotspot Management",
+  "name": "whn-bill",
+  "version": "2.1.0",
+  "description": "Sistem Manajemen ISP Terintegrasi dengan WhatsApp Gateway untuk GenieACS, Mikrotik PPPoE, dan Hotspot Management",
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon app.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "echo \"No build process required\"",
-    "setup": "npm install && node scripts/setup-database.js"
+    "setup": "npm install && node scripts/setup-database.js",
+    "check-whatsapp-version": "node scripts/check-whatsapp-version.js",
+    "test-whatsapp-connection": "node scripts/test-whatsapp-connection.js",
+    "prepare-for-github": "node scripts/prepare-for-github.js",
+    "run-sql-migrations": "node scripts/run-sql-migrations.js",
+    "check-database-structure": "node scripts/check-database-structure.js",
+    "test-admin-pages": "node scripts/test-admin-pages.js"
   },
   "dependencies": {
     "@hapi/boom": "^10.0.1",
-    "@whiskeysockets/baileys": "^6.7.17",
+    "@whiskeysockets/baileys": "^6.7.35",
     "axios": "^1.6.7",
     "bcrypt": "^6.0.0",
     "body-parser": "^1.20.2",
@@ -32,19 +38,18 @@
     "node-cron": "^3.0.3",
     "node-fetch": "^3.3.2",
     "node-routeros": "^1.6.9",
-    "pino": "^10.1.0",
+    "pino": "^8.11.0",
     "qrcode-terminal": "^0.12.0",
     "sqlite3": "^5.1.7",
     "supertest": "^7.1.4",
     "turf": "^3.0.14",
-    "update": "^0.4.2",
     "winston": "^3.8.2",
     "xendit-node": "^7.0.0"
   },
   "devDependencies": {
     "ejs-lint": "^2.0.1",
-    "eslint": "^8.57.0",
-    "nodemon": "^3.1.10"
+    "nodemon": "^3.1.10",
+    "eslint": "^8.57.0"
   },
   "engines": {
     "node": ">=14.0.0",
@@ -61,14 +66,14 @@
     "nodejs",
     "express"
   ],
-  "author": "MLJNET Team",
+  "author": "MLJ Team",
   "license": "ISC",
   "repository": {
     "type": "git",
-    "url": "https://github.com/mauljasmay/billing-mljnet.git"
+    "url": "https://github.com/mauljasmay/whn-bill.git"
   },
   "bugs": {
-    "url": "https://github.com/mauljasmay/billing-mljnet/issues"
+    "url": "https://github.com/mauljasmay/whn-bill/issues"
   },
-  "homepage": "https://github.com/mauljasmay/billing-mljnet#readme"
+  "homepage": "https://github.com/mauljasmay/whn-bill#readme"
 }

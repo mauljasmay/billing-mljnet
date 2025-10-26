@@ -896,13 +896,16 @@ class AgentManager {
     // ===== BALANCE REQUEST METHODS =====
 
     async requestBalance(agentId, amount) {
+        // Handle optional notes parameter
+        const notes = arguments.length > 2 ? arguments[2] : null;
+        
         return new Promise((resolve, reject) => {
             const sql = `
-                INSERT INTO agent_balance_requests (agent_id, amount)
-                VALUES (?, ?)
+                INSERT INTO agent_balance_requests (agent_id, amount, admin_notes)
+                VALUES (?, ?, ?)
             `;
             
-            db.run(sql, [agentId, amount], (err) => {
+            this.db.run(sql, [agentId, amount, notes], (err) => {
                 if (err) {
                     reject(err);
                     return;
@@ -940,20 +943,21 @@ class AgentManager {
 
     async approveBalanceRequest(requestId, adminId, notes = null) {
         return new Promise((resolve, reject) => {
+            const self = this; // Simpan referensi ke this
             this.db.serialize(() => {
                 this.db.run('BEGIN TRANSACTION');
 
                 // Get request details
                 const getRequestSql = 'SELECT * FROM agent_balance_requests WHERE id = ?';
-                this.db.get(getRequestSql, [requestId], (err, request) => {
+                this.db.get(getRequestSql, [requestId], function(err, request) {
                     if (err) {
-                        this.db.run('ROLLBACK');
+                        self.db.run('ROLLBACK');
                         reject(err);
                         return;
                     }
 
                     if (!request) {
-                        this.db.run('ROLLBACK');
+                        self.db.run('ROLLBACK');
                         reject(new Error('Request tidak ditemukan'));
                         return;
                     }
@@ -965,9 +969,9 @@ class AgentManager {
                         WHERE id = ?
                     `;
                     
-                    this.db.run(updateRequestSql, [adminId, notes, requestId], (err) => {
+                    self.db.run(updateRequestSql, [adminId, notes, requestId], function(err) {
                         if (err) {
-                            this.db.run('ROLLBACK');
+                            self.db.run('ROLLBACK');
                             reject(err);
                             return;
                         }
@@ -979,9 +983,9 @@ class AgentManager {
                             WHERE agent_id = ?
                         `;
                         
-                        this.db.run(updateBalanceSql, [request.amount, request.agent_id], (err) => {
+                        self.db.run(updateBalanceSql, [request.amount, request.agent_id], function(err) {
                             if (err) {
-                                this.db.run('ROLLBACK');
+                                self.db.run('ROLLBACK');
                                 reject(err);
                                 return;
                             }
@@ -992,19 +996,19 @@ class AgentManager {
                                 VALUES (?, 'deposit', ?, ?, ?)
                             `;
                             
-                            this.db.run(insertTransactionSql, [
+                            self.db.run(insertTransactionSql, [
                                 request.agent_id,
                                 request.amount,
                                 `Deposit saldo disetujui admin`,
                                 requestId.toString()
                             ], function(err) {
                                 if (err) {
-                                    this.db.run('ROLLBACK');
+                                    self.db.run('ROLLBACK');
                                     reject(err);
                                     return;
                                 }
 
-                                this.db.run('COMMIT', (err) => {
+                                self.db.run('COMMIT', (err) => {
                                     if (err) {
                                         reject(err);
                                         return;
@@ -1669,41 +1673,38 @@ class AgentManager {
         });
     }
 
-    async requestBalance(agentId, amount, notes) {
-        return new Promise((resolve, reject) => {
-            const sql = `
-                INSERT INTO agent_balance_requests (agent_id, amount, admin_notes)
-                VALUES (?, ?, ?)
-            `;
-            this.db.run(sql, [agentId, amount, notes], (err) => {
-                if (err) {
-                    reject(err);
-                    return;
-                }
-                resolve({ success: true, requestId: this.lastID });
-            });
-        });
-    }
+
 
     async getAgentTransactions(agentId, page = 1, limit = 20, filter = 'all') {
         return new Promise((resolve, reject) => {
             const offset = (page - 1) * limit;
-            let whereClause = 'WHERE agent_id = ?';
+            let whereClause = 'WHERE t.agent_id = ?';
             let params = [agentId];
             
             // Add filter conditions
             if (filter === 'voucher') {
-                whereClause += ' AND transaction_type = "voucher_sale"';
+                whereClause += ' AND t.transaction_type = "voucher_sale"';
             } else if (filter === 'payment') {
-                whereClause += ' AND transaction_type = "monthly_payment"';
+                whereClause += ' AND t.transaction_type = "monthly_payment"';
             } else if (filter === 'balance') {
-                whereClause += ' AND (transaction_type = "deposit" OR transaction_type = "withdrawal" OR transaction_type = "balance_request")';
+                whereClause += ' AND (t.transaction_type = "deposit" OR t.transaction_type = "withdrawal" OR t.transaction_type = "balance_request")';
             }
             
             const sql = `
-                SELECT * FROM agent_transactions 
+                SELECT 
+                    t.*,
+                    avs.voucher_code,
+                    avs.package_name,
+                    avs.customer_phone,
+                    avs.customer_name,
+                    avs.price as voucher_price,
+                    avs.commission as voucher_commission,
+                    avs.agent_price,
+                    avs.commission_amount
+                FROM agent_transactions t
+                LEFT JOIN agent_voucher_sales avs ON t.reference_id = avs.voucher_code AND t.transaction_type = 'voucher_sale'
                 ${whereClause}
-                ORDER BY created_at DESC 
+                ORDER BY t.created_at DESC 
                 LIMIT ? OFFSET ?
             `;
             
@@ -1716,7 +1717,7 @@ class AgentManager {
                 }
                 
                 // Get total count for pagination
-                let countSql = `SELECT COUNT(*) as total FROM agent_transactions ${whereClause}`;
+                let countSql = `SELECT COUNT(*) as total FROM agent_transactions t ${whereClause.replace('t.', '')}`;
                 this.db.get(countSql, [agentId], (countErr, countRow) => {
                     if (countErr) {
                         reject(countErr);

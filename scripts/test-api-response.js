@@ -106,7 +106,7 @@ function testAPI() {
     req.on('error', (error) => {
         console.log('❌ Request error:', error.message);
         console.log('\n💡 Make sure the server is running:');
-        console.log('   pm2 restart Billing MLJNET');
+        console.log('   pm2 restart gembok-bill');
         console.log('   or');
         console.log('   node app.js');
     });
@@ -121,4 +121,3 @@ function testAPI() {
 
 // Jalankan test
 testAPI();
-

@@ -94,9 +94,9 @@ fi
 
 # 11. Setup PM2 untuk production
 log_info "Setting up PM2 for production..."
-pm2 stop Billing MLJNET || true
-pm2 delete Billing MLJNET || true
-pm2 start app.js --name Billing MLJNET
+pm2 stop gembok-bill || true
+pm2 delete gembok-bill || true
+pm2 start app.js --name gembok-bill
 
 # 12. Setup PM2 startup script
 log_info "Setting up PM2 startup script..."
@@ -111,10 +111,10 @@ echo "  - Admin Portal: http://$(curl -s ifconfig.me || echo 'SERVER_IP'):3002/a
 echo "  - Customer Portal: http://$(curl -s ifconfig.me || echo 'SERVER_IP'):3002"
 echo ""
 echo "🔧 Management Commands:"
-echo "  - Check status: pm2 status Billing MLJNET"
-echo "  - View logs: pm2 logs Billing MLJNET"
-echo "  - Restart: pm2 restart Billing MLJNET"
-echo "  - Stop: pm2 stop Billing MLJNET"
+echo "  - Check status: pm2 status gembok-bill"
+echo "  - View logs: pm2 logs gembok-bill"
+echo "  - Restart: pm2 restart gembok-bill"
+echo "  - Stop: pm2 stop gembok-bill"
 echo ""
 echo "🔍 Troubleshooting:"
 echo "  - SQLite3 errors: npm rebuild"
@@ -131,8 +131,7 @@ echo "   Check: $(curl -s ifconfig.me || echo 'SERVER_IP'):3002"
 
 # 14. Verifikasi
 log_info "Verifying deployment..."
-pm2 status Billing MLJNET
+pm2 status gembok-bill
 
 echo ""
 log_success "🎉 Deploy selesai! Aplikasi siap digunakan."
-

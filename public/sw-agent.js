@@ -257,7 +257,7 @@ self.addEventListener('push', function(event) {
   };
   
   event.waitUntil(
-    self.registration.showNotification('Billing MLJNET Agent', options)
+    self.registration.showNotification('GEMBOK-BILL Agent', options)
   );
 });
 
@@ -280,4 +280,3 @@ self.addEventListener('notificationclick', function(event) {
     );
   }
 });
-
